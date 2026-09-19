@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "emonphenom"
+version = "0.1.0"
+description = "Munder Difflin paper company domain model and multi-agent operations layer"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+# Natural-language request parsing is optional: the whole system runs
+# deterministically without it.
+nl = ["anthropic>=1.0.0", "pydantic>=2.0"]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+munder = "emonphenom.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
