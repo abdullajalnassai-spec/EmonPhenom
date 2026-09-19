@@ -7,6 +7,7 @@ import sqlite3
 import sys
 
 from emonphenom import fulfillment, inventory, ledger, roster
+from emonphenom.simulation import simulate
 from emonphenom.agents import Orchestrator
 from emonphenom.catalog import CATALOG
 from emonphenom.db import fresh
@@ -110,6 +111,19 @@ def cmd_roster(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_simulate(args: argparse.Namespace) -> int:
+    result = simulate(fresh(":memory:"), args.days, seed=args.seed)
+    if not args.quiet:
+        print(result.table())
+        print()
+    print(result.summary())
+    if args.csv:
+        with open(args.csv, "w", encoding="utf-8") as fh:
+            fh.write(result.to_csv())
+        print(f"\nwrote {args.csv}")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="munder", description="Munder Difflin operations")
     parser.add_argument("--db", default="munder.db", help="SQLite file (default: munder.db)")
@@ -126,6 +140,14 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("stock", help="show stock levels").set_defaults(func=cmd_stock)
     sub.add_parser("report", help="financial summary").set_defaults(func=cmd_report)
     sub.add_parser("demo", help="run a scripted day, in memory").set_defaults(func=cmd_demo)
+
+    p_sim = sub.add_parser("simulate", help="run a trading month, day by day")
+    p_sim.add_argument("--days", type=int, default=30)
+    p_sim.add_argument("--seed", type=int, default=1,
+                       help="same seed, same month (default: 1)")
+    p_sim.add_argument("--csv", help="also write the daily rows to this file")
+    p_sim.add_argument("--quiet", action="store_true", help="summary only")
+    p_sim.set_defaults(func=cmd_simulate)
 
     p_roster = sub.add_parser("roster", help="the specialist roster in .claude/agents/")
     p_roster.add_argument("--search", help="match name, division or description")

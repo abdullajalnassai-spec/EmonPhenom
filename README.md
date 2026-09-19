@@ -36,6 +36,7 @@ decides whether stock exists, and never touches the ledger.
 | `requests_nl.py` | Free text → `ParsedRequest` (Claude, or regex fallback) |
 | `agents/` | Five specialists + an orchestrator that routes between them |
 | `roster.py` | Loads the 279 specialist definitions in `.claude/agents/` |
+| `simulation.py` | Seeded day-by-day trading month with customer demand |
 
 ## Business rules worth knowing
 
@@ -104,6 +105,36 @@ rather than degrading silently.
 Credentials resolve the usual way: `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN`,
 or an `ant auth login` profile.
 
+## Simulation
+
+A single transaction never tests an inventory policy. Reorder points, lead
+times and the margin floor only prove themselves against demand that does not
+politely match what is on the shelf.
+
+```bash
+munder simulate                      # 30 days, seeded, day by day
+munder simulate --days 90 --seed 4
+munder simulate --quiet              # summary only
+munder simulate --csv month.csv      # daily rows for a spreadsheet
+```
+
+Six customer profiles drive demand -- a school district buying commodity copy
+paper by the pallet and pushing hard on price, a county clerk on forms and
+envelopes, a retail group on thermal rolls, and three small irregular buyers.
+Each simulated day, in order: receive due deliveries, promote backorders the
+delivery unblocked, ship yesterday's reserved orders, take new orders, then run
+the standing reorder policy.
+
+Same seed, same month -- so a policy change can be measured against a baseline
+instead of against noise.
+
+**What the default run shows.** Fill rate lands around 60-70%: roughly a third
+of orders arrive to find the shelf short. That is not a bug in the simulation,
+it is the seeded inventory policy being too slow -- reorder points sized for
+quiet weeks, against lead times of 2 to 14 days. The lever is
+`_SEED_STOCK` in `db.py`; raising a reorder point and re-running the same seed
+shows what it buys and what it costs in tied-up cash.
+
 ## The specialist roster
 
 `.claude/agents/` carries 279 specialist definitions across 18 divisions
@@ -134,7 +165,7 @@ domain core remains the only thing that decides money or stock.
 ## Tests
 
 ```bash
-python -m pytest        # 77 tests, no network, no API key
+python -m pytest        # 91 tests, no network, no API key
 ```
 
 Coverage is on the rules that cost money if they break: tier boundaries, the

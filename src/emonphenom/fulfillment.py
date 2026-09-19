@@ -106,6 +106,24 @@ def open_restocks(conn: sqlite3.Connection) -> list[sqlite3.Row]:
     ).fetchall()
 
 
+def has_open_restock(conn: sqlite3.Connection, sku: str) -> bool:
+    """True if stock is already on order -- stops duplicate purchase orders."""
+    row = conn.execute(
+        "SELECT 1 FROM restocks WHERE sku = ? AND received = 0 LIMIT 1",
+        (by_sku(sku).sku,),
+    ).fetchone()
+    return row is not None
+
+
+def due_restocks(conn: sqlite3.Connection, on: date) -> list[sqlite3.Row]:
+    """Deliveries that have arrived by `on` and not yet been booked in."""
+    return conn.execute(
+        "SELECT * FROM restocks WHERE received = 0 AND expected_on <= ?"
+        " ORDER BY expected_on, id",
+        (on.isoformat(),),
+    ).fetchall()
+
+
 def place_order(
     conn: sqlite3.Connection, quote: Quote, *, on: date | None = None
 ) -> Order:
@@ -138,6 +156,16 @@ def place_order(
     conn.commit()
 
     for short in shortfalls:
+        # Don't re-order what is already in transit and big enough to cover the
+        # gap -- a SKU short on consecutive days would otherwise raise a fresh
+        # purchase order every time and drain cash into excess stock.
+        covered = conn.execute(
+            "SELECT 1 FROM restocks WHERE sku = ? AND received = 0 AND quantity >= ?"
+            " LIMIT 1",
+            (short.sku, short.short_by),
+        ).fetchone()
+        if covered:
+            continue
         product = by_sku(short.sku)
         stock_row = inv.stock(conn, short.sku)
         raise_restock(
