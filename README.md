@@ -37,6 +37,7 @@ decides whether stock exists, and never touches the ledger.
 | `agents/` | Five specialists + an orchestrator that routes between them |
 | `roster.py` | Loads the 279 specialist definitions in `.claude/agents/` |
 | `simulation.py` | Seeded day-by-day trading month with customer demand |
+| `policy.py` | Demand-sized reorder points, and A/B evaluation of policies |
 
 ## Business rules worth knowing
 
@@ -130,10 +131,52 @@ instead of against noise.
 
 **What the default run shows.** Fill rate lands around 60-70%: roughly a third
 of orders arrive to find the shelf short. That is not a bug in the simulation,
-it is the seeded inventory policy being too slow -- reorder points sized for
-quiet weeks, against lead times of 2 to 14 days. The lever is
-`_SEED_STOCK` in `db.py`; raising a reorder point and re-running the same seed
-shows what it buys and what it costs in tied-up cash.
+it is the seeded inventory policy being wrong. `munder tune` measures how
+wrong, and `policy.py` fixes it.
+
+## Tuning the reorder policy
+
+```bash
+munder tune                                  # seeded vs demand-sized, 8 seeds x 60 days
+munder tune --days 90 --seeds 12
+munder tune --no-spike-cover                 # size on average demand only
+munder tune --safety 1.6 --cover 14          # sweep the knobs yourself
+```
+
+```
+                                seeded    demand-sized          change
+----------------------------------------------------------------------
+fill rate                        68.1%           88.2%         +20.1pp
+revenue                    $197,889.11     $239,585.19     +$41,696.08
+lowest cash                 $24,509.37      $15,866.92      -$8,642.45
+avg stock at cost           $41,050.19      $53,579.49     +$12,529.30
+```
+
+Both policies face identical demand -- same seeds, same customers, same days --
+so the difference is the policy and nothing else.
+
+**The finding that matters: demand here is lumpy.** One account can ask for
+1,600 reams in a single line. A reorder point sized for *average* demand over
+the lead time can never absorb that, however much safety factor is piled on:
+
+| policy | fill rate | lowest cash | avg stock |
+|---|---|---|---|
+| seeded baseline | 68.1% | $24,509 | $41,050 |
+| average demand only (`--no-spike-cover`) | 70.5% | $22,334 | $42,173 |
+| + covers the largest single order | 88.2% | $15,867 | $53,579 |
+| + safety 1.6, cover 14d | 92.0% | **-$204** | $71,765 |
+
+Covering the largest plausible single order is worth ~18 points of fill rate.
+Everything after that buys inventory, not service — and the most aggressive
+setting overdraws the bank account. The defaults in `policy.py` sit at the knee
+of that curve.
+
+### A known limitation
+
+Nothing enforces a cash floor: `receive_restock` books a delivery whatever the
+balance, which is how the aggressive policy reaches -$204. The simulation
+reports the overdraft rather than preventing it. A real replenishment policy
+would need a cash constraint before it could be trusted to run unattended.
 
 ## The specialist roster
 
@@ -165,7 +208,7 @@ domain core remains the only thing that decides money or stock.
 ## Tests
 
 ```bash
-python -m pytest        # 91 tests, no network, no API key
+python -m pytest        # 104 tests, no network, no API key
 ```
 
 Coverage is on the rules that cost money if they break: tier boundaries, the

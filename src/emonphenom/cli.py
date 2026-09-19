@@ -8,6 +8,7 @@ import sys
 
 from emonphenom import fulfillment, inventory, ledger, roster
 from emonphenom.simulation import simulate
+from emonphenom import policy as policy_mod
 from emonphenom.agents import Orchestrator
 from emonphenom.catalog import CATALOG
 from emonphenom.db import fresh
@@ -124,6 +125,21 @@ def cmd_simulate(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_tune(args: argparse.Namespace) -> int:
+    seeds = tuple(range(1, args.seeds + 1))
+    before = policy_mod.evaluate("seeded", days=args.days, seeds=seeds)
+    after = policy_mod.evaluate(
+        "demand-sized", days=args.days, seeds=seeds,
+        policy=policy_mod.compute(
+            safety_factor=args.safety,
+            cover_days=args.cover,
+            cover_largest_order=not args.no_spike_cover,
+        ),
+    )
+    print(policy_mod.compare(before, after))
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="munder", description="Munder Difflin operations")
     parser.add_argument("--db", default="munder.db", help="SQLite file (default: munder.db)")
@@ -148,6 +164,16 @@ def main(argv: list[str] | None = None) -> int:
     p_sim.add_argument("--csv", help="also write the daily rows to this file")
     p_sim.add_argument("--quiet", action="store_true", help="summary only")
     p_sim.set_defaults(func=cmd_simulate)
+
+    p_tune = sub.add_parser(
+        "tune", help="compare the seeded reorder policy against a demand-sized one")
+    p_tune.add_argument("--days", type=int, default=60)
+    p_tune.add_argument("--seeds", type=int, default=8, help="run seeds 1..N")
+    p_tune.add_argument("--safety", type=float, default=policy_mod.DEFAULT_SAFETY_FACTOR)
+    p_tune.add_argument("--cover", type=int, default=policy_mod.DEFAULT_COVER_DAYS)
+    p_tune.add_argument("--no-spike-cover", action="store_true",
+                        help="size on average demand only, ignoring large single orders")
+    p_tune.set_defaults(func=cmd_tune)
 
     p_roster = sub.add_parser("roster", help="the specialist roster in .claude/agents/")
     p_roster.add_argument("--search", help="match name, division or description")

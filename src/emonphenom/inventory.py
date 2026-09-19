@@ -110,3 +110,24 @@ def receive(conn: sqlite3.Connection, sku: str, quantity: int) -> None:
         "UPDATE inventory SET on_hand = on_hand + ? WHERE sku = ?",
         (quantity, current.sku),
     )
+
+
+def set_policy(
+    conn: sqlite3.Connection,
+    sku: str,
+    *,
+    reorder_point: int | None = None,
+    reorder_qty: int | None = None,
+) -> Stock:
+    """Change the replenishment policy for one SKU. Stock levels are untouched."""
+    current = stock(conn, sku)
+    point = current.reorder_point if reorder_point is None else reorder_point
+    qty = current.reorder_qty if reorder_qty is None else reorder_qty
+    if point < 0 or qty <= 0:
+        raise ValueError("reorder point must be >= 0 and reorder quantity > 0")
+    conn.execute(
+        "UPDATE inventory SET reorder_point = ?, reorder_qty = ? WHERE sku = ?",
+        (point, qty, current.sku),
+    )
+    conn.commit()
+    return stock(conn, current.sku)
