@@ -9,6 +9,7 @@ import sys
 from emonphenom import fulfillment, inventory, ledger, roster
 from emonphenom.simulation import simulate
 from emonphenom import policy as policy_mod
+from emonphenom import agents_sync
 from emonphenom.agents import Orchestrator
 from emonphenom.catalog import CATALOG
 from emonphenom.db import fresh
@@ -144,6 +145,24 @@ def cmd_tune(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_agents(args: argparse.Namespace) -> int:
+    if args.action == "status":
+        installed = agents_sync.status()
+        if installed is None:
+            print("no roster installed -- run: munder agents sync")
+            return 1
+        print(installed.describe())
+        return 0
+
+    try:
+        report = agents_sync.sync(source=args.source, ref=args.ref)
+    except agents_sync.SyncError as exc:
+        print(f"could not sync the roster: {exc}")
+        return 1
+    print(report.describe())
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="munder", description="Munder Difflin operations")
     parser.add_argument("--db", default="munder.db", help="SQLite file (default: munder.db)")
@@ -182,6 +201,16 @@ def main(argv: list[str] | None = None) -> int:
     p_tune.add_argument("--no-spike-cover", action="store_true",
                         help="size on average demand only, ignoring large single orders")
     p_tune.set_defaults(func=cmd_tune)
+
+    p_agents = sub.add_parser(
+        "agents", help="install the specialist roster from the Agents repository")
+    agents_sub = p_agents.add_subparsers(dest="action", required=True)
+    p_sync = agents_sub.add_parser("sync", help="fetch and install the roster")
+    p_sync.add_argument("--source", default=agents_sync.DEFAULT_SOURCE)
+    p_sync.add_argument("--ref", help="branch, tag or commit (default: the default branch)")
+    p_sync.set_defaults(func=cmd_agents, action="sync")
+    p_status = agents_sub.add_parser("status", help="what is installed, and from where")
+    p_status.set_defaults(func=cmd_agents, action="status")
 
     p_roster = sub.add_parser("roster", help="the specialist roster in .claude/agents/")
     p_roster.add_argument("--search", help="match name, division or description")

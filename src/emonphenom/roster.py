@@ -93,7 +93,10 @@ def _load_cached(directory: str) -> tuple[RosterAgent, ...]:
     divisions: dict[str, dict[str, str]] = {}
     if index_file.is_file():
         try:
-            divisions = json.loads(index_file.read_text(encoding="utf-8"))
+            payload = json.loads(index_file.read_text(encoding="utf-8"))
+            # The synced index nests under "agents" beside a "_meta" block;
+            # a hand-written flat mapping is still accepted.
+            divisions = payload.get("agents", payload) if isinstance(payload, dict) else {}
         except json.JSONDecodeError:
             divisions = {}
     found = (_parse(p, divisions) for p in sorted(root.glob("*.md")))

@@ -35,7 +35,8 @@ decides whether stock exists, and never touches the ledger.
 | `ledger.py` | Signed cash ledger and the financial report |
 | `requests_nl.py` | Free text → `ParsedRequest` (Claude, or regex fallback) |
 | `agents/` | Five specialists + an orchestrator that routes between them |
-| `roster.py` | Loads the 279 specialist definitions in `.claude/agents/` |
+| `roster.py` | Reads whatever roster is installed in `.claude/agents/` |
+| `agents_sync.py` | Installs that roster from the Agents repository, on demand |
 | `simulation.py` | Seeded day-by-day trading month with customer demand |
 | `policy.py` | Demand-sized reorder points, budgeted replenishment, A/B evaluation |
 | `customers.py` | The demand profiles pricing and replenishment both read |
@@ -218,35 +219,52 @@ aside when the order was raised.
 
 ## The specialist roster
 
-`.claude/agents/` carries 279 specialist definitions across 18 divisions
-(sales, finance, engineering, marketing, security, ...). Two consumers, one set
-of files:
+279+ specialist definitions (sales, finance, engineering, marketing, security,
+...) live in a separate repository and are **installed on demand, never
+vendored here**:
 
-* **Claude Code** discovers them automatically, so anyone who clones this
-  repository can delegate to any specialist by name.
-* **`emonphenom.roster`** reads the same files, so Python code can list, search
-  and recommend them.
+```bash
+munder agents sync                   # fetch and install the current roster
+munder agents sync --ref v2          # pin to a branch, tag or commit
+munder agents status                 # what is installed, and from which commit
+```
+
+```
+installed 289 agents across 18 divisions
+  from https://github.com/abdullajalnassai-spec/Agents @ HEAD (fc27e1fb)
+  into /path/to/EmonPhenom/.claude/agents
+```
+
+`.claude/agents/` is gitignored, so the roster never enters this repository's
+history. Once synced, **Claude Code** discovers the flat `*.md` files
+automatically and can delegate to any specialist by name; **`emonphenom.roster`**
+reads the same files so Python can list, search and recommend them:
 
 ```bash
 munder roster                        # divisions and counts
 munder roster --search pricing
-munder roster --division sales
 ```
 
 ```python
 from emonphenom import roster
-
 roster.advisors_for("quote")         # who to consult about a quote
-roster.get("sales-deal-strategist")  # one specialist
 ```
 
-The roster is advisory. Nothing in it prices, reserves or ships anything — the
-domain core remains the only thing that decides money or stock.
+The roster is a tool for working on this project, not a dependency of its code.
+Nothing under `pricing`, `inventory`, `fulfillment` or `simulation` imports it,
+and the test suite passes without it — `roster.load()` simply returns nothing
+when no roster is installed. That is why it is not vendored: something this
+optional should not make every clone carry 4MB of markdown, nor impose
+submodule friction on people who never touch it.
+
+Syncing prunes definitions that left the source, so a retired specialist
+disappears locally too. Files you add yourself are pruned as well; pass
+`prune=False` to `agents_sync.install` to keep them.
 
 ## Tests
 
 ```bash
-python -m pytest        # 119 tests, no network, no API key
+python -m pytest        # 132 tests, no network, no API key
 ```
 
 Coverage is on the rules that cost money if they break: tier boundaries, the

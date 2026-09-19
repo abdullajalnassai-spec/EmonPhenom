@@ -9,3 +9,7 @@ htmlcov/
 *.db
 *.sqlite3
 .env
+
+# The specialist roster is installed on demand, never vendored:
+#   munder agents sync
+.claude/agents/

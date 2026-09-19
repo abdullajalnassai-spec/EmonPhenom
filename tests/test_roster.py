@@ -74,9 +74,11 @@ def test_advisors_map_an_intent_to_divisions(fake_roster):
     assert roster.advisors_for("unknown-intent", directory=fake_roster) == []
 
 
-def test_the_shipped_roster_loads():
-    """The real .claude/agents/ directory in this repository."""
+def test_the_installed_roster_loads_if_one_is_installed():
+    """The roster is synced on demand, not vendored, so it may be absent."""
     agents = roster.load()
-    assert len(agents) == 279
+    if not agents:
+        pytest.skip("no roster installed -- run: munder agents sync")
+    assert len(agents) > 100
     assert all(a.name for a in agents)
     assert "engineering" in roster.divisions()
