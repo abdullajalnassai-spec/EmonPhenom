@@ -79,23 +79,23 @@ class Quote:
 
     @property
     def base_cents(self) -> int:
-        return sum(l.base_cents for l in self.lines)
+        return sum(line.base_cents for line in self.lines)
 
     @property
     def discount_cents(self) -> int:
-        return sum(l.discount_cents for l in self.lines)
+        return sum(line.discount_cents for line in self.lines)
 
     @property
     def rush_fee_cents(self) -> int:
-        return sum(l.rush_fee_cents for l in self.lines)
+        return sum(line.rush_fee_cents for line in self.lines)
 
     @property
     def total_cents(self) -> int:
-        return sum(l.total_cents for l in self.lines)
+        return sum(line.total_cents for line in self.lines)
 
     @property
     def margin_cents(self) -> int:
-        return sum(l.margin_cents for l in self.lines)
+        return sum(line.margin_cents for line in self.lines)
 
     @property
     def margin_pct(self) -> float:
@@ -104,7 +104,7 @@ class Quote:
     def describe(self) -> str:
         head = [f"Quote {self.quote_id} for {self.customer}",
                 f"issued {self.issued_on.isoformat()}, valid to {self.expires_on.isoformat()}"]
-        body = [l.describe() for l in self.lines]
+        body = [line.describe() for line in self.lines]
         foot = [
             f"{'subtotal':>56} {fmt(self.base_cents):>12}",
             f"{'volume discount':>56} {fmt(-self.discount_cents):>12}",

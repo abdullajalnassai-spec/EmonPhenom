@@ -65,9 +65,9 @@ def test_rejects_nonsense_quantities():
 
 def test_quote_totals_are_the_sum_of_their_lines():
     quote = build_quote("Q-1", "Scranton SD", [("A4-COPY-80", 600), ("ENV-10-WHT", 120)])
-    assert quote.total_cents == sum(l.total_cents for l in quote.lines)
-    assert quote.discount_cents == sum(l.discount_cents for l in quote.lines)
-    assert quote.margin_cents == sum(l.margin_cents for l in quote.lines)
+    assert quote.total_cents == sum(line.total_cents for line in quote.lines)
+    assert quote.discount_cents == sum(line.discount_cents for line in quote.lines)
+    assert quote.margin_cents == sum(line.margin_cents for line in quote.lines)
     assert quote.expires_on > quote.issued_on
     assert "TOTAL" in quote.describe()
 

@@ -140,7 +140,7 @@ def place_order(
     day = on or date.today()
     order_id = _next_id(conn, "orders", "SO")
 
-    wanted = [(l.sku, l.quantity, l.total_cents) for l in quote.lines]
+    wanted = [(line.sku, line.quantity, line.total_cents) for line in quote.lines]
     shortfalls = [
         Shortfall(sku, qty, inv.stock(conn, sku).available)
         for sku, qty, _ in wanted
@@ -223,7 +223,10 @@ def get_order(conn: sqlite3.Connection, order_id: str) -> Order:
         total_cents=row["total_cents"],
         margin_cents=row["margin_cents"],
         placed_on=row["placed_on"],
-        lines=tuple(OrderLine(l["sku"], l["quantity"], l["total_cents"]) for l in lines),
+        lines=tuple(
+            OrderLine(row["sku"], row["quantity"], row["total_cents"])
+            for row in lines
+        ),
     )
 
 
@@ -261,7 +264,7 @@ def retry_awaiting(conn: sqlite3.Connection) -> list[str]:
     ).fetchall()
     for row in rows:
         order = get_order(conn, row["id"])
-        if all(inv.stock(conn, l.sku).available >= l.quantity for l in order.lines):
+        if all(inv.stock(conn, line.sku).available >= line.quantity for line in order.lines):
             for line in order.lines:
                 inv.reserve(conn, line.sku, line.quantity)
             conn.execute("UPDATE orders SET status = ? WHERE id = ?", (RESERVED, order.id))

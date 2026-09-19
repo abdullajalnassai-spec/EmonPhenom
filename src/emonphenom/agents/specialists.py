@@ -97,7 +97,7 @@ class QuotingAgent(Agent):
         except (UnknownSKU, ValueError) as exc:
             return self._fail(str(exc))
 
-        clamped = [l.sku for l in quote.lines if l.margin_floor_applied]
+        clamped = [line.sku for line in quote.lines if line.margin_floor_applied]
         summary = (
             f"{quote.quote_id} for {request.customer}: {fmt(quote.total_cents)} "
             f"across {len(quote.lines)} line(s), margin {quote.margin_pct:.1f}%"

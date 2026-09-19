@@ -51,7 +51,7 @@ def test_reorder_quantity_respects_minimum_order():
 def test_policy_covers_the_whole_catalog():
     computed = policy.compute()
     assert len(computed) == 16
-    assert all(l.reorder_qty > 0 for l in computed.values())
+    assert all(line.reorder_qty > 0 for line in computed.values())
 
 
 def test_invalid_parameters_are_rejected():

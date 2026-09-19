@@ -36,7 +36,7 @@ def test_quote_flows_end_to_end(orch):
     assert result.ok
     quote = result.data["quote"]
     assert quote.customer == "Scranton SD"
-    assert [l.sku for l in quote.lines] == ["A4-COPY-80"]
+    assert [line.sku for line in quote.lines] == ["A4-COPY-80"]
     assert quote.lines[0].discount_pct == 10
 
 
