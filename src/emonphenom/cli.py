@@ -113,7 +113,8 @@ def cmd_roster(args: argparse.Namespace) -> int:
 
 
 def cmd_simulate(args: argparse.Namespace) -> int:
-    result = simulate(fresh(":memory:"), args.days, seed=args.seed)
+    result = simulate(fresh(":memory:"), args.days, seed=args.seed,
+                      cash_floor_cents=round(args.cash_floor * 100))
     if not args.quiet:
         print(result.table())
         print()
@@ -127,7 +128,9 @@ def cmd_simulate(args: argparse.Namespace) -> int:
 
 def cmd_tune(args: argparse.Namespace) -> int:
     seeds = tuple(range(1, args.seeds + 1))
-    before = policy_mod.evaluate("seeded", days=args.days, seeds=seeds)
+    floor = round(args.cash_floor * 100)
+    before = policy_mod.evaluate("seeded", days=args.days, seeds=seeds,
+                                 cash_floor_cents=floor)
     after = policy_mod.evaluate(
         "demand-sized", days=args.days, seeds=seeds,
         policy=policy_mod.compute(
@@ -135,6 +138,7 @@ def cmd_tune(args: argparse.Namespace) -> int:
             cover_days=args.cover,
             cover_largest_order=not args.no_spike_cover,
         ),
+        cash_floor_cents=floor,
     )
     print(policy_mod.compare(before, after))
     return 0
@@ -161,6 +165,8 @@ def main(argv: list[str] | None = None) -> int:
     p_sim.add_argument("--days", type=int, default=30)
     p_sim.add_argument("--seed", type=int, default=1,
                        help="same seed, same month (default: 1)")
+    p_sim.add_argument("--cash-floor", type=float, default=5000.0,
+                       help="operating balance replenishment may not spend below")
     p_sim.add_argument("--csv", help="also write the daily rows to this file")
     p_sim.add_argument("--quiet", action="store_true", help="summary only")
     p_sim.set_defaults(func=cmd_simulate)
@@ -171,6 +177,8 @@ def main(argv: list[str] | None = None) -> int:
     p_tune.add_argument("--seeds", type=int, default=8, help="run seeds 1..N")
     p_tune.add_argument("--safety", type=float, default=policy_mod.DEFAULT_SAFETY_FACTOR)
     p_tune.add_argument("--cover", type=int, default=policy_mod.DEFAULT_COVER_DAYS)
+    p_tune.add_argument("--cash-floor", type=float, default=5000.0,
+                        help="operating balance replenishment may not spend below")
     p_tune.add_argument("--no-spike-cover", action="store_true",
                         help="size on average demand only, ignoring large single orders")
     p_tune.set_defaults(func=cmd_tune)

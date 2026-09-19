@@ -20,58 +20,14 @@ from emonphenom import fulfillment as ful
 from emonphenom import inventory as inv
 from emonphenom import ledger
 from emonphenom.catalog import by_sku
+from emonphenom.customers import CUSTOMERS, CustomerProfile
 from emonphenom.money import fmt
 from emonphenom.pricing import build_quote
 
 
-@dataclass(frozen=True)
-class CustomerProfile:
-    """How one account behaves: what they buy, how often, how hard they push."""
-
-    name: str
-    order_probability: float
-    skus: tuple[str, ...]
-    min_qty: int
-    max_qty: int
-    rush_probability: float = 0.0
-    max_rep_discount_pct: int = 0
-    max_lines: int = 1
-
-
-# A believable Scranton customer base: one whale on commodity copy paper, a
-# couple of steady mid-market accounts, and some small irregular buyers.
-CUSTOMERS: tuple[CustomerProfile, ...] = (
-    CustomerProfile(
-        "Scranton School District", 0.34,
-        ("LTR-COPY-20", "A4-COPY-80", "RECY-LTR-30"),
-        400, 1600, rush_probability=0.05, max_rep_discount_pct=22, max_lines=2,
-    ),
-    CustomerProfile(
-        "Lackawanna County Clerk", 0.26,
-        ("NCR-3PT", "ENV-10-WHT", "ENV-9-WHT", "LGL-COPY-20"),
-        40, 260, rush_probability=0.10, max_rep_discount_pct=6, max_lines=2,
-    ),
-    CustomerProfile(
-        "Steamtown Retail Group", 0.30,
-        ("THERM-80", "GLOSS-PHOTO", "COLOR-ASST"),
-        20, 140, rush_probability=0.20, max_rep_discount_pct=8,
-    ),
-    CustomerProfile(
-        "Vance Refrigeration", 0.14,
-        ("BANNER-36", "POSTER-24", "CARD-110-WHT"),
-        8, 60, rush_probability=0.35, max_rep_discount_pct=4,
-    ),
-    CustomerProfile(
-        "Dunmore Dental Associates", 0.12,
-        ("LTRHD-CUSTOM", "ENV-A7-CRM", "CARD-110-CRM"),
-        10, 70, rush_probability=0.08, max_rep_discount_pct=3,
-    ),
-    CustomerProfile(
-        "Poor Richard's Pub", 0.18,
-        ("POSTER-24", "COLOR-ASST", "CARD-110-WHT"),
-        5, 40, rush_probability=0.15, max_rep_discount_pct=2,
-    ),
-)
+__all__ = [
+    "CUSTOMERS", "CustomerProfile", "DaySnapshot", "SimulationResult", "simulate",
+]
 
 
 @dataclass(frozen=True)
@@ -85,6 +41,7 @@ class DaySnapshot:
     cash_cents: int
     stock_at_cost_cents: int
     purchase_orders_raised: int
+    restocks_deferred: int
     deliveries_received: int
     skus_below_reorder: int
     open_backorders: int
@@ -100,6 +57,7 @@ class SimulationResult:
     orders_backordered: int = 0
     orders_shipped: int = 0
     purchase_orders: int = 0
+    restocks_deferred: int = 0
     deliveries: int = 0
     margin_floor_hits: int = 0
     lost_line_attempts: int = 0
@@ -126,6 +84,11 @@ class SimulationResult:
     @property
     def low_water_cash_cents(self) -> int:
         return min((s.cash_cents for s in self.snapshots), default=0)
+
+    @property
+    def days_cash_constrained(self) -> int:
+        """Days the business wanted stock it could not pay for."""
+        return sum(1 for s in self.snapshots if s.restocks_deferred)
 
     @property
     def unshipped_at_close(self) -> int:
@@ -163,6 +126,8 @@ class SimulationResult:
             f"{'lowest cash in month':<26}{fmt(self.low_water_cash_cents):>14}",
             "",
             f"{'purchase orders raised':<26}{self.purchase_orders:>14,}",
+            f"{'restocks deferred (no cash)':<26}{self.restocks_deferred:>14,}",
+            f"{'days cash-constrained':<26}{self.days_cash_constrained:>14,}",
             f"{'deliveries received':<26}{self.deliveries:>14,}",
             f"{'lines held at margin floor':<26}{self.margin_floor_hits:>14,}",
         ]
@@ -196,15 +161,26 @@ def _basket(rng: random.Random, profile: CustomerProfile) -> list[tuple[str, int
     return basket
 
 
-def _replenish(conn: sqlite3.Connection, on: date) -> int:
-    """Standing policy: anything at or under its reorder point gets ordered once."""
-    raised = 0
-    for level in inv.below_reorder(conn):
-        if ful.has_open_restock(conn, level.sku):
-            continue
-        ful.raise_restock(conn, level.sku, level.reorder_qty, on=on)
-        raised += 1
-    return raised
+def _replenish(
+    conn: sqlite3.Connection,
+    on: date,
+    *,
+    cash_floor_cents: int,
+    customers: tuple[CustomerProfile, ...],
+) -> tuple[int, int]:
+    """Standing policy, within what the bank account allows.
+
+    Returns (raised, deferred). Deferred restocks are the ones the business
+    needed but could not afford today -- the number to watch when a service
+    level looks unreachable.
+    """
+    from emonphenom import policy
+
+    budget = ledger.available_cents(conn, cash_floor_cents)
+    decided = policy.plan(policy.candidates(conn, customers), budget)
+    for candidate in decided.funded:
+        ful.raise_restock(conn, candidate.sku, candidate.quantity, on=on)
+    return len(decided.funded), len(decided.deferred)
 
 
 def simulate(
@@ -214,8 +190,14 @@ def simulate(
     seed: int = 1,
     start: date | None = None,
     customers: tuple[CustomerProfile, ...] = CUSTOMERS,
+    cash_floor_cents: int = 500_000,
 ) -> SimulationResult:
-    """Run `days` trading days against a seeded database."""
+    """Run `days` trading days against a seeded database.
+
+    `cash_floor_cents` is the operating balance replenishment may not spend
+    below. Purchase orders are committed when raised but paid on delivery, so
+    the budget nets off everything already in transit.
+    """
     if days <= 0:
         raise ValueError("days must be positive")
 
@@ -268,23 +250,22 @@ def simulate(
             result.margin_floor_hits += sum(
                 1 for line in quote.lines if line.margin_floor_applied
             )
-            order = ful.place_order(conn, quote, on=today)
+            # Every purchasing decision goes through the budgeted step below.
+            order = ful.place_order(conn, quote, on=today, auto_restock=False)
             taken += 1
             if order.shortfalls:
                 backordered += 1
 
-        # 5. Standing replenishment policy.
-        _replenish(conn, today)
-        # Count every PO dated today -- policy-driven and shortfall-driven alike.
-        raised = conn.execute(
-            "SELECT COUNT(*) AS n FROM restocks WHERE ordered_on = ?",
-            (today.isoformat(),),
-        ).fetchone()["n"]
+        # 5. Standing replenishment policy, inside the cash constraint.
+        raised, deferred = _replenish(
+            conn, today, cash_floor_cents=cash_floor_cents, customers=customers
+        )
 
         result.orders_taken += taken
         result.orders_backordered += backordered
         result.orders_shipped += shipped
         result.purchase_orders += raised
+        result.restocks_deferred += deferred
 
         report = ledger.report(conn)
         result.snapshots.append(
@@ -298,6 +279,7 @@ def simulate(
                 cash_cents=report.cash_cents,
                 stock_at_cost_cents=report.stock_at_cost_cents,
                 purchase_orders_raised=raised,
+                restocks_deferred=deferred,
                 deliveries_received=len(due),
                 skus_below_reorder=len(inv.below_reorder(conn)),
                 open_backorders=report.orders_awaiting_stock,

@@ -125,9 +125,18 @@ def due_restocks(conn: sqlite3.Connection, on: date) -> list[sqlite3.Row]:
 
 
 def place_order(
-    conn: sqlite3.Connection, quote: Quote, *, on: date | None = None
+    conn: sqlite3.Connection,
+    quote: Quote,
+    *,
+    on: date | None = None,
+    auto_restock: bool = True,
 ) -> Order:
-    """Turn an accepted quote into an order, reserving stock if it is all there."""
+    """Turn an accepted quote into an order, reserving stock if it is all there.
+
+    `auto_restock=False` records the shortfall but raises no purchase order, for
+    callers that run their own budgeted replenishment and want every purchasing
+    decision to go through it.
+    """
     day = on or date.today()
     order_id = _next_id(conn, "orders", "SO")
 
@@ -154,6 +163,18 @@ def place_order(
         [(order_id, sku, qty, total) for sku, qty, total in wanted],
     )
     conn.commit()
+
+    if not auto_restock:
+        return Order(
+            id=order_id,
+            customer=quote.customer,
+            status=status,
+            total_cents=quote.total_cents,
+            margin_cents=quote.margin_cents,
+            placed_on=day.isoformat(),
+            lines=tuple(OrderLine(sku, qty, total) for sku, qty, total in wanted),
+            shortfalls=tuple(shortfalls),
+        )
 
     for short in shortfalls:
         # Don't re-order what is already in transit and big enough to cover the

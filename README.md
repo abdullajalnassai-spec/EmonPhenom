@@ -37,7 +37,8 @@ decides whether stock exists, and never touches the ledger.
 | `agents/` | Five specialists + an orchestrator that routes between them |
 | `roster.py` | Loads the 279 specialist definitions in `.claude/agents/` |
 | `simulation.py` | Seeded day-by-day trading month with customer demand |
-| `policy.py` | Demand-sized reorder points, and A/B evaluation of policies |
+| `policy.py` | Demand-sized reorder points, budgeted replenishment, A/B evaluation |
+| `customers.py` | The demand profiles pricing and replenishment both read |
 
 ## Business rules worth knowing
 
@@ -171,12 +172,49 @@ Everything after that buys inventory, not service — and the most aggressive
 setting overdraws the bank account. The defaults in `policy.py` sit at the knee
 of that curve.
 
-### A known limitation
+## The cash constraint
 
-Nothing enforces a cash floor: `receive_restock` books a delivery whatever the
-balance, which is how the aggressive policy reaches -$204. The simulation
-reports the overdraft rather than preventing it. A real replenishment policy
-would need a cash constraint before it could be trusted to run unattended.
+Replenishment spends money the business may not have. Purchase orders are
+**committed when raised and paid on delivery**, so the bank balance alone
+overstates what is available:
+
+```
+available = cash - committed (open purchase orders) - operating floor
+```
+
+Every purchasing decision goes through one budgeted step. When the budget will
+not cover everything that needs stock, the planner ranks candidates by
+**margin protected per cent spent** and funds down the list — and keeps going
+past something it cannot afford, so a cheap fast mover is not starved by an
+expensive one ranked above it. What it cannot fund is counted as a *deferred
+restock* rather than silently dropped.
+
+Two things qualify as needing stock: a SKU at or below its reorder point (the
+standing policy), and a SKU with customers already waiting on it. The second
+case matters because one large order can empty the shelf without the shelf ever
+looking low — leaving it out means a backorder can sit unserved forever.
+
+```bash
+munder simulate --cash-floor 5000
+munder tune --cash-floor 20000        # see service collapse as money tightens
+```
+
+| operating floor | fill rate | lowest cash | deferred restocks | revenue |
+|---|---|---|---|---|
+| $0 | 88.7% | $17,937 | 6.0 | $244,982 |
+| $5,000 (default) | 87.8% | $19,043 | 13.8 | $244,982 |
+| $10,000 | 85.6% | $19,830 | 29.5 | $244,982 |
+| $20,000 | 79.3% | $24,753 | 82.5 | $199,455 |
+| $30,000 | 70.6% | $25,000 | 188.2 | $193,912 |
+
+**What the constraint revealed.** Before it existed, the most aggressive
+reorder policy reached a 92% fill rate — financed by an overdraft. With cash
+enforced it reaches 87%, the same as the tuned policy, while deferring five
+times as many restocks. Its extra service was never real; it was borrowed.
+
+Cash is now an invariant, not a report: `cash - committed >= floor` holds at
+every point, because a delivery only ever pays down money that was already set
+aside when the order was raised.
 
 ## The specialist roster
 
@@ -208,7 +246,7 @@ domain core remains the only thing that decides money or stock.
 ## Tests
 
 ```bash
-python -m pytest        # 104 tests, no network, no API key
+python -m pytest        # 119 tests, no network, no API key
 ```
 
 Coverage is on the rules that cost money if they break: tier boundaries, the

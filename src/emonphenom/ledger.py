@@ -86,6 +86,23 @@ def cash_balance(conn: sqlite3.Connection) -> int:
     return int(row["c"])
 
 
+def committed_cents(conn: sqlite3.Connection) -> int:
+    """Cash already promised to suppliers: purchase orders raised, not yet paid.
+
+    Spending is decided when a purchase order is raised but the money leaves on
+    delivery, so the bank balance alone overstates what is actually available.
+    """
+    row = conn.execute(
+        "SELECT COALESCE(SUM(cost_cents), 0) AS c FROM restocks WHERE received = 0"
+    ).fetchone()
+    return int(row["c"])
+
+
+def available_cents(conn: sqlite3.Connection, floor_cents: int = 0) -> int:
+    """What may still be committed today without breaching the operating floor."""
+    return max(cash_balance(conn) - committed_cents(conn) - floor_cents, 0)
+
+
 def history(conn: sqlite3.Connection, limit: int = 20) -> list[Transaction]:
     rows = conn.execute(
         "SELECT * FROM transactions ORDER BY id DESC LIMIT ?", (limit,)

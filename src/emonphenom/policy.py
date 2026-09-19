@@ -20,7 +20,7 @@ from dataclasses import dataclass
 
 from emonphenom import inventory as inv
 from emonphenom.catalog import CATALOG, by_sku
-from emonphenom.simulation import CUSTOMERS, CustomerProfile
+from emonphenom.customers import CUSTOMERS, CustomerProfile
 
 # Tuned by sweeping both knobs over 8 seeded 60-day months (see `munder tune`).
 # Covering the largest single order is what buys service; piling on safety
@@ -151,6 +151,7 @@ class Outcome:
     avg_stock_cents: int
     purchase_orders: float
     margin_floor_hits: float
+    restocks_deferred: float = 0.0
 
 
 def evaluate(
@@ -160,6 +161,7 @@ def evaluate(
     seeds: tuple[int, ...] = (1, 2, 3, 4, 5, 6, 7, 8),
     policy: dict[str, PolicyLine] | None = None,
     customers: tuple[CustomerProfile, ...] = CUSTOMERS,
+    cash_floor_cents: int = 500_000,
 ) -> Outcome:
     """Run the same months under one policy and average the results."""
     from emonphenom.db import fresh
@@ -173,7 +175,10 @@ def evaluate(
         conn = fresh(":memory:")
         if policy is not None:
             apply(conn, policy)
-        results.append(simulate(conn, days, seed=seed, customers=customers))
+        results.append(
+            simulate(conn, days, seed=seed, customers=customers,
+                     cash_floor_cents=cash_floor_cents)
+        )
         conn.close()
 
     n = len(results)
@@ -196,6 +201,7 @@ def evaluate(
         ),
         purchase_orders=sum(r.purchase_orders for r in results) / n,
         margin_floor_hits=sum(r.margin_floor_hits for r in results) / n,
+        restocks_deferred=sum(r.restocks_deferred for r in results) / n,
     )
 
 
@@ -233,6 +239,9 @@ def compare(before: Outcome, after: Outcome) -> str:
          delta_money(before.avg_stock_cents, after.avg_stock_cents)),
         ("purchase orders", f"{before.purchase_orders:.1f}", f"{after.purchase_orders:.1f}",
          delta_num(before.purchase_orders, after.purchase_orders)),
+        ("restocks deferred", f"{before.restocks_deferred:.1f}",
+         f"{after.restocks_deferred:.1f}",
+         delta_num(before.restocks_deferred, after.restocks_deferred)),
     ]
 
     head = f"{'':<22}{before.label:>16}{after.label:>16}{'change':>16}"
@@ -244,3 +253,108 @@ def compare(before: Outcome, after: Outcome) -> str:
     ]
     out += [f"{label:<22}{b:>16}{a:>16}{d:>16}" for label, b, a, d in rows]
     return "\n".join(out)
+
+
+# --------------------------------------------------------------------------
+# Replenishment under a cash constraint
+# --------------------------------------------------------------------------
+
+@dataclass(frozen=True)
+class Candidate:
+    """A SKU that wants restocking, priced and scored."""
+
+    sku: str
+    quantity: int
+    cost_cents: int
+    margin_at_risk_cents: int  # margin per day exposed while this SKU is short
+
+    @property
+    def value_density(self) -> float:
+        """Margin protected per cent spent -- the ranking when money is tight."""
+        return self.margin_at_risk_cents / self.cost_cents if self.cost_cents else 0.0
+
+
+@dataclass(frozen=True)
+class Plan:
+    funded: tuple[Candidate, ...]
+    deferred: tuple[Candidate, ...]
+
+    @property
+    def cost_cents(self) -> int:
+        return sum(c.cost_cents for c in self.funded)
+
+
+def backordered_demand(conn: sqlite3.Connection) -> dict[str, int]:
+    """Units per SKU promised to orders that are waiting for stock."""
+    rows = conn.execute(
+        "SELECT l.sku AS sku, SUM(l.quantity) AS qty FROM order_lines l"
+        " JOIN orders o ON o.id = l.order_id"
+        " WHERE o.status = 'awaiting_stock' GROUP BY l.sku"
+    ).fetchall()
+    return {r["sku"]: int(r["qty"]) for r in rows}
+
+
+def candidates(
+    conn: sqlite3.Connection, customers: tuple[CustomerProfile, ...] = CUSTOMERS
+) -> list[Candidate]:
+    """Everything that needs stock and has none on order.
+
+    Two things qualify. A SKU at or below its reorder point is the standing
+    policy. A SKU with customers already waiting on it is the urgent case --
+    and it can happen well above the reorder point, because one large order can
+    exceed the shelf without the shelf ever looking low. Leaving that case out
+    means a backorder can sit unserved forever.
+    """
+    from emonphenom import fulfillment as ful
+
+    wanted: dict[str, int] = {}
+    for level in inv.below_reorder(conn):
+        wanted[level.sku] = level.reorder_qty
+
+    for sku, promised in backordered_demand(conn).items():
+        shortfall = promised - inv.stock(conn, sku).available
+        if shortfall > 0:
+            level = inv.stock(conn, sku)
+            wanted[sku] = max(wanted.get(sku, 0), shortfall, level.reorder_qty)
+
+    out: list[Candidate] = []
+    for sku, quantity in wanted.items():
+        if ful.has_open_restock(conn, sku):
+            continue
+        product = by_sku(sku)
+        quantity = max(quantity, product.min_order_qty)
+        rate = demand_per_day(sku, customers)
+        out.append(
+            Candidate(
+                sku=sku,
+                quantity=quantity,
+                cost_cents=product.unit_cost_cents * quantity,
+                margin_at_risk_cents=round(rate * product.margin_cents),
+            )
+        )
+    return sorted(out, key=lambda c: c.sku)
+
+
+def plan(candidates_: list[Candidate], budget_cents: int) -> Plan:
+    """Spend a budget on the restocks that protect the most margin per cent.
+
+    Greedy by value density, and it keeps going past an item it cannot afford:
+    a cheap fast-moving SKU should not be starved because an expensive one
+    happened to rank above it.
+    """
+    if budget_cents < 0:
+        raise ValueError("budget cannot be negative")
+
+    ranked = sorted(
+        candidates_, key=lambda c: (-c.value_density, -c.margin_at_risk_cents, c.sku)
+    )
+    funded: list[Candidate] = []
+    deferred: list[Candidate] = []
+    remaining = budget_cents
+    for candidate in ranked:
+        if candidate.cost_cents <= remaining:
+            funded.append(candidate)
+            remaining -= candidate.cost_cents
+        else:
+            deferred.append(candidate)
+    return Plan(tuple(funded), tuple(deferred))
