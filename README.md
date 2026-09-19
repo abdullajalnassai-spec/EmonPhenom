@@ -35,6 +35,7 @@ decides whether stock exists, and never touches the ledger.
 | `ledger.py` | Signed cash ledger and the financial report |
 | `requests_nl.py` | Free text → `ParsedRequest` (Claude, or regex fallback) |
 | `agents/` | Five specialists + an orchestrator that routes between them |
+| `roster.py` | Loads the 279 specialist definitions in `.claude/agents/` |
 
 ## Business rules worth knowing
 
@@ -103,10 +104,37 @@ rather than degrading silently.
 Credentials resolve the usual way: `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN`,
 or an `ant auth login` profile.
 
+## The specialist roster
+
+`.claude/agents/` carries 279 specialist definitions across 18 divisions
+(sales, finance, engineering, marketing, security, ...). Two consumers, one set
+of files:
+
+* **Claude Code** discovers them automatically, so anyone who clones this
+  repository can delegate to any specialist by name.
+* **`emonphenom.roster`** reads the same files, so Python code can list, search
+  and recommend them.
+
+```bash
+munder roster                        # divisions and counts
+munder roster --search pricing
+munder roster --division sales
+```
+
+```python
+from emonphenom import roster
+
+roster.advisors_for("quote")         # who to consult about a quote
+roster.get("sales-deal-strategist")  # one specialist
+```
+
+The roster is advisory. Nothing in it prices, reserves or ships anything — the
+domain core remains the only thing that decides money or stock.
+
 ## Tests
 
 ```bash
-python -m pytest        # 68 tests, no network, no API key
+python -m pytest        # 77 tests, no network, no API key
 ```
 
 Coverage is on the rules that cost money if they break: tier boundaries, the

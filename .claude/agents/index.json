@@ -1,0 +1,1118 @@
+{
+ "academic-anthropologist": {
+  "division": "academic",
+  "name": "Anthropologist"
+ },
+ "academic-geographer": {
+  "division": "academic",
+  "name": "Geographer"
+ },
+ "academic-historian": {
+  "division": "academic",
+  "name": "Historian"
+ },
+ "academic-narratologist": {
+  "division": "academic",
+  "name": "Narratologist"
+ },
+ "academic-psychologist": {
+  "division": "academic",
+  "name": "Psychologist"
+ },
+ "academic-statistician": {
+  "division": "academic",
+  "name": "Statistician"
+ },
+ "accounts-payable-agent": {
+  "division": "specialized",
+  "name": "Accounts Payable Agent"
+ },
+ "agentic-identity-trust": {
+  "division": "specialized",
+  "name": "Agentic Identity & Trust Architect"
+ },
+ "agents-orchestrator": {
+  "division": "specialized",
+  "name": "Agents Orchestrator"
+ },
+ "automation-governance-architect": {
+  "division": "specialized",
+  "name": "Automation Governance Architect"
+ },
+ "blender-addon-engineer": {
+  "division": "game-development",
+  "name": "Blender Add-on Engineer"
+ },
+ "business-strategist": {
+  "division": "specialized",
+  "name": "Business Strategist"
+ },
+ "change-management-consultant": {
+  "division": "specialized",
+  "name": "Change Management Consultant"
+ },
+ "chief-financial-officer": {
+  "division": "specialized",
+  "name": "Chief Financial Officer"
+ },
+ "corporate-training-designer": {
+  "division": "specialized",
+  "name": "Corporate Training Designer"
+ },
+ "customer-service": {
+  "division": "specialized",
+  "name": "Customer Service"
+ },
+ "customer-success-manager": {
+  "division": "specialized",
+  "name": "Customer Success Manager"
+ },
+ "data-consolidation-agent": {
+  "division": "specialized",
+  "name": "Data Consolidation Agent"
+ },
+ "data-privacy-officer": {
+  "division": "specialized",
+  "name": "Data Privacy Officer"
+ },
+ "design-brand-guardian": {
+  "division": "design",
+  "name": "Brand Guardian"
+ },
+ "design-image-prompt-engineer": {
+  "division": "design",
+  "name": "Image Prompt Engineer"
+ },
+ "design-inclusive-visuals-specialist": {
+  "division": "design",
+  "name": "Inclusive Visuals Specialist"
+ },
+ "design-persona-walkthrough": {
+  "division": "design",
+  "name": "Persona Walkthrough Specialist"
+ },
+ "design-ui-designer": {
+  "division": "design",
+  "name": "UI Designer"
+ },
+ "design-ui-finish-gate-reviewer": {
+  "division": "design",
+  "name": "UI Finish-Gate Reviewer"
+ },
+ "design-ux-architect": {
+  "division": "design",
+  "name": "UX Architect"
+ },
+ "design-ux-researcher": {
+  "division": "design",
+  "name": "UX Researcher"
+ },
+ "design-visual-storyteller": {
+  "division": "design",
+  "name": "Visual Storyteller"
+ },
+ "design-whimsy-injector": {
+  "division": "design",
+  "name": "Whimsy Injector"
+ },
+ "economy-designer": {
+  "division": "game-development",
+  "name": "Economy Designer"
+ },
+ "engineering-ai-data-remediation-engineer": {
+  "division": "engineering",
+  "name": "AI Data Remediation Engineer"
+ },
+ "engineering-ai-engineer": {
+  "division": "engineering",
+  "name": "AI Engineer"
+ },
+ "engineering-api-platform-engineer": {
+  "division": "engineering",
+  "name": "API Platform Engineer"
+ },
+ "engineering-ats-validator-architect": {
+  "division": "engineering",
+  "name": "ATS Validator Architect"
+ },
+ "engineering-autonomous-optimization-architect": {
+  "division": "engineering",
+  "name": "Autonomous Optimization Architect"
+ },
+ "engineering-backend-architect": {
+  "division": "engineering",
+  "name": "Backend Architect"
+ },
+ "engineering-china-network-engineer": {
+  "division": "engineering",
+  "name": "China Network Engineer"
+ },
+ "engineering-cms-developer": {
+  "division": "engineering",
+  "name": "CMS Developer"
+ },
+ "engineering-code-reviewer": {
+  "division": "engineering",
+  "name": "Code Reviewer"
+ },
+ "engineering-codebase-onboarding-engineer": {
+  "division": "engineering",
+  "name": "Codebase Onboarding Engineer"
+ },
+ "engineering-data-engineer": {
+  "division": "engineering",
+  "name": "Data Engineer"
+ },
+ "engineering-data-visualization-engineer": {
+  "division": "engineering",
+  "name": "Data Visualization Engineer"
+ },
+ "engineering-database-optimizer": {
+  "division": "engineering",
+  "name": "Database Optimizer"
+ },
+ "engineering-database-reliability-engineer": {
+  "division": "engineering",
+  "name": "Database Reliability Engineer"
+ },
+ "engineering-desktop-app-engineer": {
+  "division": "engineering",
+  "name": "Desktop App Engineer"
+ },
+ "engineering-developer-tooling-engineer": {
+  "division": "engineering",
+  "name": "Developer Tooling Engineer"
+ },
+ "engineering-devops-automator": {
+  "division": "engineering",
+  "name": "DevOps Automator"
+ },
+ "engineering-drupal-performance": {
+  "division": "engineering",
+  "name": "Drupal Performance Engineer"
+ },
+ "engineering-drupal-shopping-cart": {
+  "division": "engineering",
+  "name": "Drupal Shopping Cart Engineer"
+ },
+ "engineering-email-intelligence-engineer": {
+  "division": "engineering",
+  "name": "Email Intelligence Engineer"
+ },
+ "engineering-embedded-firmware-engineer": {
+  "division": "engineering",
+  "name": "Embedded Firmware Engineer"
+ },
+ "engineering-feishu-integration-developer": {
+  "division": "engineering",
+  "name": "Feishu Integration Developer"
+ },
+ "engineering-filament-optimization-specialist": {
+  "division": "engineering",
+  "name": "Filament Optimization Specialist"
+ },
+ "engineering-finops-engineer": {
+  "division": "engineering",
+  "name": "FinOps Engineer"
+ },
+ "engineering-frontend-developer": {
+  "division": "engineering",
+  "name": "Frontend Developer"
+ },
+ "engineering-gaussdb-expert": {
+  "division": "engineering",
+  "name": "GaussDB Expert Engineer"
+ },
+ "engineering-git-workflow-master": {
+  "division": "engineering",
+  "name": "Git Workflow Master"
+ },
+ "engineering-i18n-engineer": {
+  "division": "engineering",
+  "name": "Internationalization Engineer"
+ },
+ "engineering-identity-access-engineer": {
+  "division": "engineering",
+  "name": "Identity & Access Engineer"
+ },
+ "engineering-incident-response-commander": {
+  "division": "engineering",
+  "name": "Incident Response Commander"
+ },
+ "engineering-iot-fleet-engineer": {
+  "division": "engineering",
+  "name": "IoT Fleet Engineer"
+ },
+ "engineering-it-service-manager": {
+  "division": "engineering",
+  "name": "IT Service Manager"
+ },
+ "engineering-knowledge-graph-engineer": {
+  "division": "engineering",
+  "name": "Knowledge Graph Engineer"
+ },
+ "engineering-llm-post-training-engineer": {
+  "division": "engineering",
+  "name": "LLM Post-Training Engineer"
+ },
+ "engineering-minimal-change-engineer": {
+  "division": "engineering",
+  "name": "Minimal Change Engineer"
+ },
+ "engineering-mobile-app-builder": {
+  "division": "engineering",
+  "name": "Mobile App Builder"
+ },
+ "engineering-mobile-release-engineer": {
+  "division": "engineering",
+  "name": "Mobile Release Engineer"
+ },
+ "engineering-multi-agent-systems-architect": {
+  "division": "engineering",
+  "name": "Multi-Agent Systems Architect"
+ },
+ "engineering-network-engineer": {
+  "division": "engineering",
+  "name": "Network Engineer"
+ },
+ "engineering-orgscript-engineer": {
+  "division": "engineering",
+  "name": "OrgScript Engineer"
+ },
+ "engineering-payments-billing-engineer": {
+  "division": "engineering",
+  "name": "Payments & Billing Engineer"
+ },
+ "engineering-pdf-engine-architect": {
+  "division": "engineering",
+  "name": "PDF Engine Architect"
+ },
+ "engineering-platform-engineer": {
+  "division": "engineering",
+  "name": "Platform Engineer"
+ },
+ "engineering-privacy-engineer": {
+  "division": "engineering",
+  "name": "Privacy Engineer"
+ },
+ "engineering-prompt-engineer": {
+  "division": "engineering",
+  "name": "Prompt Engineer"
+ },
+ "engineering-rag-pipeline-engineer": {
+  "division": "engineering",
+  "name": "RAG Pipeline Engineer"
+ },
+ "engineering-rapid-prototyper": {
+  "division": "engineering",
+  "name": "Rapid Prototyper"
+ },
+ "engineering-realtime-collaboration-engineer": {
+  "division": "engineering",
+  "name": "Realtime Collaboration Engineer"
+ },
+ "engineering-rust-refactoring-specialist": {
+  "division": "engineering",
+  "name": "Rust Refactoring Specialist"
+ },
+ "engineering-search-relevance-engineer": {
+  "division": "engineering",
+  "name": "Search Relevance Engineer"
+ },
+ "engineering-section-508-specialist": {
+  "division": "engineering",
+  "name": "Section 508 Accessibility Specialist"
+ },
+ "engineering-senior-developer": {
+  "division": "engineering",
+  "name": "Senior Developer"
+ },
+ "engineering-software-architect": {
+  "division": "engineering",
+  "name": "Software Architect"
+ },
+ "engineering-solidity-smart-contract-engineer": {
+  "division": "engineering",
+  "name": "Solidity Smart Contract Engineer"
+ },
+ "engineering-sre": {
+  "division": "engineering",
+  "name": "SRE (Site Reliability Engineer)"
+ },
+ "engineering-technical-writer": {
+  "division": "engineering",
+  "name": "Technical Writer"
+ },
+ "engineering-universal-document-compiler": {
+  "division": "engineering",
+  "name": "Universal Document Compiler"
+ },
+ "engineering-uswds-developer": {
+  "division": "engineering",
+  "name": "USWDS Developer"
+ },
+ "engineering-video-streaming-engineer": {
+  "division": "engineering",
+  "name": "Video Streaming Engineer"
+ },
+ "engineering-voice-ai-integration-engineer": {
+  "division": "engineering",
+  "name": "Voice AI Integration Engineer"
+ },
+ "engineering-webassembly-engineer": {
+  "division": "engineering",
+  "name": "WebAssembly Engineer"
+ },
+ "engineering-wechat-mini-program-developer": {
+  "division": "engineering",
+  "name": "WeChat Mini Program Developer"
+ },
+ "engineering-wordpress-performance": {
+  "division": "engineering",
+  "name": "WordPress Performance Engineer"
+ },
+ "engineering-wordpress-shopping-cart": {
+  "division": "engineering",
+  "name": "WordPress Shopping Cart Engineer"
+ },
+ "esg-sustainability-officer": {
+  "division": "specialized",
+  "name": "ESG & Sustainability Officer"
+ },
+ "finance-bookkeeper-controller": {
+  "division": "finance",
+  "name": "Bookkeeper & Controller"
+ },
+ "finance-financial-analyst": {
+  "division": "finance",
+  "name": "Financial Analyst"
+ },
+ "finance-fpa-analyst": {
+  "division": "finance",
+  "name": "FP&A Analyst"
+ },
+ "finance-investment-researcher": {
+  "division": "finance",
+  "name": "Investment Researcher"
+ },
+ "finance-tax-strategist": {
+  "division": "finance",
+  "name": "Tax Strategist"
+ },
+ "game-audio-engineer": {
+  "division": "game-development",
+  "name": "Game Audio Engineer"
+ },
+ "game-designer": {
+  "division": "game-development",
+  "name": "Game Designer"
+ },
+ "gis-3d-scene-developer": {
+  "division": "gis",
+  "name": "3D & Scene Developer"
+ },
+ "gis-analyst": {
+  "division": "gis",
+  "name": "GIS Analyst"
+ },
+ "gis-bim-specialist": {
+  "division": "gis",
+  "name": "BIM/GIS Specialist"
+ },
+ "gis-cartography-designer": {
+  "division": "gis",
+  "name": "Cartography Designer"
+ },
+ "gis-drone-reality-mapping": {
+  "division": "gis",
+  "name": "Drone/Reality Mapping Specialist"
+ },
+ "gis-geoai-ml-engineer": {
+  "division": "gis",
+  "name": "GeoAI/ML Engineer"
+ },
+ "gis-geoprocessing-specialist": {
+  "division": "gis",
+  "name": "Geoprocessing Specialist"
+ },
+ "gis-qa-engineer": {
+  "division": "gis",
+  "name": "GIS QA Engineer"
+ },
+ "gis-solution-engineer": {
+  "division": "gis",
+  "name": "Solution Engineer"
+ },
+ "gis-spatial-data-engineer": {
+  "division": "gis",
+  "name": "Spatial Data Engineer"
+ },
+ "gis-spatial-data-scientist": {
+  "division": "gis",
+  "name": "Spatial Data Scientist"
+ },
+ "gis-technical-consultant": {
+  "division": "gis",
+  "name": "Technical Consultant"
+ },
+ "gis-web-gis-developer": {
+  "division": "gis",
+  "name": "Web GIS Developer"
+ },
+ "godot-gameplay-scripter": {
+  "division": "game-development",
+  "name": "Godot Gameplay Scripter"
+ },
+ "godot-multiplayer-engineer": {
+  "division": "game-development",
+  "name": "Godot Multiplayer Engineer"
+ },
+ "godot-shader-developer": {
+  "division": "game-development",
+  "name": "Godot Shader Developer"
+ },
+ "government-digital-presales-consultant": {
+  "division": "specialized",
+  "name": "Government Digital Presales Consultant"
+ },
+ "grant-writer": {
+  "division": "specialized",
+  "name": "Grant Writer"
+ },
+ "healthcare-aging-parent-care-companion": {
+  "division": "specialized",
+  "name": "Aging Parent Care Companion"
+ },
+ "healthcare-clinical-evidence-agent": {
+  "division": "healthcare",
+  "name": "Clinical Evidence Agent"
+ },
+ "healthcare-customer-service": {
+  "division": "specialized",
+  "name": "Healthcare Customer Service"
+ },
+ "healthcare-innovation-strategist": {
+  "division": "healthcare",
+  "name": "Healthcare Innovation Strategist"
+ },
+ "healthcare-marketing-compliance": {
+  "division": "specialized",
+  "name": "Healthcare Marketing Compliance Specialist"
+ },
+ "healthcare-sovereign-health-systems-agent": {
+  "division": "healthcare",
+  "name": "Sovereign Health Systems Agent"
+ },
+ "hospitality-guest-services": {
+  "division": "specialized",
+  "name": "Hospitality Guest Services"
+ },
+ "hr-onboarding": {
+  "division": "specialized",
+  "name": "HR Onboarding"
+ },
+ "identity-graph-operator": {
+  "division": "specialized",
+  "name": "Identity Graph Operator"
+ },
+ "language-translator": {
+  "division": "specialized",
+  "name": "Language Translator"
+ },
+ "legal-billing-time-tracking": {
+  "division": "specialized",
+  "name": "Legal Billing & Time Tracking"
+ },
+ "legal-client-intake": {
+  "division": "specialized",
+  "name": "Legal Client Intake"
+ },
+ "legal-document-review": {
+  "division": "specialized",
+  "name": "Legal Document Review"
+ },
+ "level-designer": {
+  "division": "game-development",
+  "name": "Level Designer"
+ },
+ "loan-officer-assistant": {
+  "division": "specialized",
+  "name": "Loan Officer Assistant"
+ },
+ "lsp-index-engineer": {
+  "division": "specialized",
+  "name": "LSP/Index Engineer"
+ },
+ "ma-integration-manager": {
+  "division": "specialized",
+  "name": "M&A Integration Manager"
+ },
+ "macos-spatial-metal-engineer": {
+  "division": "spatial-computing",
+  "name": "macOS Spatial/Metal Engineer"
+ },
+ "marketing-aeo-foundations": {
+  "division": "marketing",
+  "name": "AEO Foundations Architect"
+ },
+ "marketing-agentic-search-optimizer": {
+  "division": "marketing",
+  "name": "Agentic Search Optimizer"
+ },
+ "marketing-ai-citation-strategist": {
+  "division": "marketing",
+  "name": "AI Citation Strategist"
+ },
+ "marketing-app-store-optimizer": {
+  "division": "marketing",
+  "name": "App Store Optimizer"
+ },
+ "marketing-baidu-seo-specialist": {
+  "division": "marketing",
+  "name": "Baidu SEO Specialist"
+ },
+ "marketing-bilibili-content-strategist": {
+  "division": "marketing",
+  "name": "Bilibili Content Strategist"
+ },
+ "marketing-book-co-author": {
+  "division": "marketing",
+  "name": "Book Co-Author"
+ },
+ "marketing-carousel-growth-engine": {
+  "division": "marketing",
+  "name": "Carousel Growth Engine"
+ },
+ "marketing-china-ecommerce-operator": {
+  "division": "marketing",
+  "name": "China E-Commerce Operator"
+ },
+ "marketing-china-market-localization-strategist": {
+  "division": "marketing",
+  "name": "China Market Localization Strategist"
+ },
+ "marketing-content-creator": {
+  "division": "marketing",
+  "name": "Content Creator"
+ },
+ "marketing-cross-border-ecommerce": {
+  "division": "marketing",
+  "name": "Cross-Border E-Commerce Specialist"
+ },
+ "marketing-douyin-strategist": {
+  "division": "marketing",
+  "name": "Douyin Strategist"
+ },
+ "marketing-email-strategist": {
+  "division": "marketing",
+  "name": "Email Marketing Strategist"
+ },
+ "marketing-global-podcast-strategist": {
+  "division": "marketing",
+  "name": "Global Podcast Strategist"
+ },
+ "marketing-growth-hacker": {
+  "division": "marketing",
+  "name": "Growth Hacker"
+ },
+ "marketing-instagram-curator": {
+  "division": "marketing",
+  "name": "Instagram Curator"
+ },
+ "marketing-kuaishou-strategist": {
+  "division": "marketing",
+  "name": "Kuaishou Strategist"
+ },
+ "marketing-linkedin-content-creator": {
+  "division": "marketing",
+  "name": "LinkedIn Content Creator"
+ },
+ "marketing-livestream-commerce-coach": {
+  "division": "marketing",
+  "name": "Livestream Commerce Coach"
+ },
+ "marketing-multi-platform-publisher": {
+  "division": "marketing",
+  "name": "Multi-Platform Publisher"
+ },
+ "marketing-podcast-strategist": {
+  "division": "marketing",
+  "name": "Podcast Strategist"
+ },
+ "marketing-pr-communications-manager": {
+  "division": "marketing",
+  "name": "PR & Communications Manager"
+ },
+ "marketing-private-domain-operator": {
+  "division": "marketing",
+  "name": "Private Domain Operator"
+ },
+ "marketing-reddit-community-builder": {
+  "division": "marketing",
+  "name": "Reddit Community Builder"
+ },
+ "marketing-seo-specialist": {
+  "division": "marketing",
+  "name": "SEO Specialist"
+ },
+ "marketing-short-video-editing-coach": {
+  "division": "marketing",
+  "name": "Short-Video Editing Coach"
+ },
+ "marketing-social-media-strategist": {
+  "division": "marketing",
+  "name": "Social Media Strategist"
+ },
+ "marketing-tiktok-strategist": {
+  "division": "marketing",
+  "name": "TikTok Strategist"
+ },
+ "marketing-twitter-engager": {
+  "division": "marketing",
+  "name": "Twitter Engager"
+ },
+ "marketing-video-optimization-specialist": {
+  "division": "marketing",
+  "name": "Video Optimization Specialist"
+ },
+ "marketing-wechat-official-account": {
+  "division": "marketing",
+  "name": "WeChat Official Account Manager"
+ },
+ "marketing-weibo-strategist": {
+  "division": "marketing",
+  "name": "Weibo Strategist"
+ },
+ "marketing-x-twitter-intelligence-analyst": {
+  "division": "marketing",
+  "name": "X/Twitter Intelligence Analyst"
+ },
+ "marketing-xiaohongshu-specialist": {
+  "division": "marketing",
+  "name": "Xiaohongshu Specialist"
+ },
+ "marketing-zhihu-strategist": {
+  "division": "marketing",
+  "name": "Zhihu Strategist"
+ },
+ "medical-billing-coding-specialist": {
+  "division": "specialized",
+  "name": "Medical Billing & Coding Specialist"
+ },
+ "narrative-designer": {
+  "division": "game-development",
+  "name": "Narrative Designer"
+ },
+ "operations-manager": {
+  "division": "specialized",
+  "name": "Operations Manager"
+ },
+ "organizational-psychologist": {
+  "division": "specialized",
+  "name": "Organizational Psychologist"
+ },
+ "paid-media-auditor": {
+  "division": "paid-media",
+  "name": "Paid Media Auditor"
+ },
+ "paid-media-creative-strategist": {
+  "division": "paid-media",
+  "name": "Ad Creative Strategist"
+ },
+ "paid-media-paid-social-strategist": {
+  "division": "paid-media",
+  "name": "Paid Social Strategist"
+ },
+ "paid-media-ppc-strategist": {
+  "division": "paid-media",
+  "name": "PPC Campaign Strategist"
+ },
+ "paid-media-programmatic-buyer": {
+  "division": "paid-media",
+  "name": "Programmatic & Display Buyer"
+ },
+ "paid-media-search-query-analyst": {
+  "division": "paid-media",
+  "name": "Search Query Analyst"
+ },
+ "paid-media-tracking-specialist": {
+  "division": "paid-media",
+  "name": "Tracking & Measurement Specialist"
+ },
+ "personal-growth-mentor": {
+  "division": "specialized",
+  "name": "Personal Growth Mentor"
+ },
+ "product-behavioral-nudge-engine": {
+  "division": "product",
+  "name": "Behavioral Nudge Engine"
+ },
+ "product-feedback-synthesizer": {
+  "division": "product",
+  "name": "Feedback Synthesizer"
+ },
+ "product-manager": {
+  "division": "product",
+  "name": "Product Manager"
+ },
+ "product-sprint-prioritizer": {
+  "division": "product",
+  "name": "Sprint Prioritizer"
+ },
+ "product-trend-researcher": {
+  "division": "product",
+  "name": "Trend Researcher"
+ },
+ "project-management-experiment-tracker": {
+  "division": "project-management",
+  "name": "Experiment Tracker"
+ },
+ "project-management-jira-workflow-steward": {
+  "division": "project-management",
+  "name": "Jira Workflow Steward"
+ },
+ "project-management-meeting-notes-specialist": {
+  "division": "project-management",
+  "name": "Meeting Notes Specialist"
+ },
+ "project-management-project-shepherd": {
+  "division": "project-management",
+  "name": "Project Shepherd"
+ },
+ "project-management-studio-operations": {
+  "division": "project-management",
+  "name": "Studio Operations"
+ },
+ "project-management-studio-producer": {
+  "division": "project-management",
+  "name": "Studio Producer"
+ },
+ "project-manager-senior": {
+  "division": "project-management",
+  "name": "Senior Project Manager"
+ },
+ "real-estate-buyer-seller": {
+  "division": "specialized",
+  "name": "Real Estate Buyer & Seller"
+ },
+ "recruitment-specialist": {
+  "division": "specialized",
+  "name": "Recruitment Specialist"
+ },
+ "report-distribution-agent": {
+  "division": "specialized",
+  "name": "Report Distribution Agent"
+ },
+ "research-synthesist": {
+  "division": "research",
+  "name": "Research Synthesist"
+ },
+ "resume-tailor": {
+  "division": "specialized",
+  "name": "Resume Tailor"
+ },
+ "retail-customer-returns": {
+  "division": "specialized",
+  "name": "Retail Customer Returns"
+ },
+ "roblox-avatar-creator": {
+  "division": "game-development",
+  "name": "Roblox Avatar Creator"
+ },
+ "roblox-experience-designer": {
+  "division": "game-development",
+  "name": "Roblox Experience Designer"
+ },
+ "roblox-systems-scripter": {
+  "division": "game-development",
+  "name": "Roblox Systems Scripter"
+ },
+ "sales-account-strategist": {
+  "division": "sales",
+  "name": "Account Strategist"
+ },
+ "sales-coach": {
+  "division": "sales",
+  "name": "Sales Coach"
+ },
+ "sales-data-extraction-agent": {
+  "division": "specialized",
+  "name": "Sales Data Extraction Agent"
+ },
+ "sales-deal-strategist": {
+  "division": "sales",
+  "name": "Deal Strategist"
+ },
+ "sales-discovery-coach": {
+  "division": "sales",
+  "name": "Discovery Coach"
+ },
+ "sales-engineer": {
+  "division": "sales",
+  "name": "Sales Engineer"
+ },
+ "sales-offer-lead-gen-strategist": {
+  "division": "sales",
+  "name": "Offer & Lead Gen Strategist"
+ },
+ "sales-outbound-strategist": {
+  "division": "sales",
+  "name": "Outbound Strategist"
+ },
+ "sales-outreach": {
+  "division": "specialized",
+  "name": "Sales Outreach"
+ },
+ "sales-pipeline-analyst": {
+  "division": "sales",
+  "name": "Pipeline Analyst"
+ },
+ "sales-proposal-strategist": {
+  "division": "sales",
+  "name": "Proposal Strategist"
+ },
+ "security-ai-generated-code-auditor": {
+  "division": "security",
+  "name": "AI-Generated Code Security Auditor"
+ },
+ "security-appsec-engineer": {
+  "division": "security",
+  "name": "Application Security Engineer"
+ },
+ "security-architect": {
+  "division": "security",
+  "name": "Security Architect"
+ },
+ "security-blockchain-security-auditor": {
+  "division": "security",
+  "name": "Blockchain Security Auditor"
+ },
+ "security-cloud-security-architect": {
+  "division": "security",
+  "name": "Cloud Security Architect"
+ },
+ "security-compliance-auditor": {
+  "division": "security",
+  "name": "Compliance Auditor"
+ },
+ "security-incident-responder": {
+  "division": "security",
+  "name": "Incident Responder"
+ },
+ "security-penetration-tester": {
+  "division": "security",
+  "name": "Penetration Tester"
+ },
+ "security-secrets-credential-engineer": {
+  "division": "security",
+  "name": "Secrets & Credential Hygiene Engineer"
+ },
+ "security-senior-secops": {
+  "division": "security",
+  "name": "Senior SecOps Engineer"
+ },
+ "security-threat-detection-engineer": {
+  "division": "security",
+  "name": "Threat Detection Engineer"
+ },
+ "security-threat-intelligence-analyst": {
+  "division": "security",
+  "name": "Threat Intelligence Analyst"
+ },
+ "specialized-chief-of-staff": {
+  "division": "specialized",
+  "name": "Chief of Staff"
+ },
+ "specialized-civil-engineer": {
+  "division": "specialized",
+  "name": "Civil Engineer"
+ },
+ "specialized-codebase-archaeologist": {
+  "division": "specialized",
+  "name": "Codebase Archaeologist"
+ },
+ "specialized-cultural-intelligence-strategist": {
+  "division": "specialized",
+  "name": "Cultural Intelligence Strategist"
+ },
+ "specialized-developer-advocate": {
+  "division": "specialized",
+  "name": "Developer Advocate"
+ },
+ "specialized-document-generator": {
+  "division": "specialized",
+  "name": "Document Generator"
+ },
+ "specialized-fedramp-rmf-compliance": {
+  "division": "specialized",
+  "name": "FedRAMP & RMF Compliance Engineer"
+ },
+ "specialized-focus-music-architect": {
+  "division": "specialized",
+  "name": "Focus Music Architect"
+ },
+ "specialized-french-consulting-market": {
+  "division": "specialized",
+  "name": "French Consulting Market Navigator"
+ },
+ "specialized-korean-business-navigator": {
+  "division": "specialized",
+  "name": "Korean Business Navigator"
+ },
+ "specialized-master-plan-architect": {
+  "division": "specialized",
+  "name": "Master Plan Architect"
+ },
+ "specialized-mcp-builder": {
+  "division": "specialized",
+  "name": "MCP Builder"
+ },
+ "specialized-model-qa": {
+  "division": "specialized",
+  "name": "Model QA Specialist"
+ },
+ "specialized-pricing-analyst": {
+  "division": "specialized",
+  "name": "Pricing Analyst"
+ },
+ "specialized-salesforce-architect": {
+  "division": "specialized",
+  "name": "Salesforce Architect"
+ },
+ "specialized-strategy-duel-agent": {
+  "division": "specialized",
+  "name": "Strategy Duel Agent"
+ },
+ "specialized-workflow-architect": {
+  "division": "specialized",
+  "name": "Workflow Architect"
+ },
+ "study-abroad-advisor": {
+  "division": "specialized",
+  "name": "Study Abroad Advisor"
+ },
+ "supply-chain-strategist": {
+  "division": "specialized",
+  "name": "Supply Chain Strategist"
+ },
+ "support-analytics-reporter": {
+  "division": "support",
+  "name": "Analytics Reporter"
+ },
+ "support-executive-summary-generator": {
+  "division": "support",
+  "name": "Executive Summary Generator"
+ },
+ "support-finance-tracker": {
+  "division": "support",
+  "name": "Finance Tracker"
+ },
+ "support-infrastructure-maintainer": {
+  "division": "support",
+  "name": "Infrastructure Maintainer"
+ },
+ "support-legal-compliance-checker": {
+  "division": "support",
+  "name": "Legal Compliance Checker"
+ },
+ "support-support-responder": {
+  "division": "support",
+  "name": "Support Responder"
+ },
+ "technical-artist": {
+  "division": "game-development",
+  "name": "Technical Artist"
+ },
+ "terminal-integration-specialist": {
+  "division": "spatial-computing",
+  "name": "Terminal Integration Specialist"
+ },
+ "testing-accessibility-auditor": {
+  "division": "testing",
+  "name": "Accessibility Auditor"
+ },
+ "testing-api-tester": {
+  "division": "testing",
+  "name": "API Tester"
+ },
+ "testing-evidence-collector": {
+  "division": "testing",
+  "name": "Evidence Collector"
+ },
+ "testing-performance-benchmarker": {
+  "division": "testing",
+  "name": "Performance Benchmarker"
+ },
+ "testing-reality-checker": {
+  "division": "testing",
+  "name": "Reality Checker"
+ },
+ "testing-test-automation-engineer": {
+  "division": "testing",
+  "name": "Test Automation Engineer"
+ },
+ "testing-test-results-analyzer": {
+  "division": "testing",
+  "name": "Test Results Analyzer"
+ },
+ "testing-tool-evaluator": {
+  "division": "testing",
+  "name": "Tool Evaluator"
+ },
+ "testing-workflow-optimizer": {
+  "division": "testing",
+  "name": "Workflow Optimizer"
+ },
+ "unity-architect": {
+  "division": "game-development",
+  "name": "Unity Architect"
+ },
+ "unity-editor-tool-developer": {
+  "division": "game-development",
+  "name": "Unity Editor Tool Developer"
+ },
+ "unity-multiplayer-engineer": {
+  "division": "game-development",
+  "name": "Unity Multiplayer Engineer"
+ },
+ "unity-shader-graph-artist": {
+  "division": "game-development",
+  "name": "Unity Shader Graph Artist"
+ },
+ "unreal-multiplayer-architect": {
+  "division": "game-development",
+  "name": "Unreal Multiplayer Architect"
+ },
+ "unreal-systems-engineer": {
+  "division": "game-development",
+  "name": "Unreal Systems Engineer"
+ },
+ "unreal-technical-artist": {
+  "division": "game-development",
+  "name": "Unreal Technical Artist"
+ },
+ "unreal-world-builder": {
+  "division": "game-development",
+  "name": "Unreal World Builder"
+ },
+ "visionos-spatial-engineer": {
+  "division": "spatial-computing",
+  "name": "visionOS Spatial Engineer"
+ },
+ "xr-cockpit-interaction-specialist": {
+  "division": "spatial-computing",
+  "name": "XR Cockpit Interaction Specialist"
+ },
+ "xr-immersive-developer": {
+  "division": "spatial-computing",
+  "name": "XR Immersive Developer"
+ },
+ "xr-interface-architect": {
+  "division": "spatial-computing",
+  "name": "XR Interface Architect"
+ },
+ "zk-steward": {
+  "division": "specialized",
+  "name": "ZK Steward"
+ }
+}

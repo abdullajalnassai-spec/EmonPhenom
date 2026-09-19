@@ -6,7 +6,7 @@ import argparse
 import sqlite3
 import sys
 
-from emonphenom import fulfillment, inventory, ledger
+from emonphenom import fulfillment, inventory, ledger, roster
 from emonphenom.agents import Orchestrator
 from emonphenom.catalog import CATALOG
 from emonphenom.db import fresh
@@ -85,6 +85,31 @@ def cmd_demo(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_roster(args: argparse.Namespace) -> int:
+    if args.search:
+        hits = roster.search(args.search)
+    elif args.division:
+        hits = roster.by_division(args.division)
+    else:
+        counts = roster.divisions()
+        if not counts:
+            print("no roster found under .claude/agents/")
+            return 1
+        for division, count in counts.items():
+            print(f"{division:<20}{count:>4}")
+        print(f"{'total':<20}{sum(counts.values()):>4}")
+        return 0
+
+    if not hits:
+        print("no roster specialist matches that")
+        return 1
+    for agent in hits[: args.limit]:
+        print(agent.brief())
+    if len(hits) > args.limit:
+        print(f"... and {len(hits) - args.limit} more")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="munder", description="Munder Difflin operations")
     parser.add_argument("--db", default="munder.db", help="SQLite file (default: munder.db)")
@@ -101,6 +126,12 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("stock", help="show stock levels").set_defaults(func=cmd_stock)
     sub.add_parser("report", help="financial summary").set_defaults(func=cmd_report)
     sub.add_parser("demo", help="run a scripted day, in memory").set_defaults(func=cmd_demo)
+
+    p_roster = sub.add_parser("roster", help="the specialist roster in .claude/agents/")
+    p_roster.add_argument("--search", help="match name, division or description")
+    p_roster.add_argument("--division", help="list one division")
+    p_roster.add_argument("--limit", type=int, default=20)
+    p_roster.set_defaults(func=cmd_roster)
 
     args = parser.parse_args(argv)
     return args.func(args)
